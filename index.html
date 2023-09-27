@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>MIT 6.S191 Deep Learning</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d171574c-7305-4c43-b5b5-997c0b320e0f" class="page sans"><header><img class="page-cover-image" src="MIT%206.S191%20Deep%20Learning_files/met_bruegel_1565.jpg" style="object-position:center 50%"><div class="page-header-icon page-header-icon-with-cover"><span class="icon">🙇</span></div><h1 class="page-title">MIT 6.S191 Deep Learning</h1><p class="page-description"></p></header><div class="page-body"><h3 id="66a0d744-90bb-4960-a732-1bdaa6c6ff8e" >Lecture Notes</h3><ul id="9694359c-0d31-4b54-a4bc-478951894d8d" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 1 - Fully Connected Networks</strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="f63f5ac2-22c9-40cd-a1f3-57e72a9ade78" class="toggle"><li><details><summary>What is early stopping? (hint: it’s a regularisation method)</summary><p id="3f39cc65-8b3e-4df2-aaa9-d14d0f0aa4d8" >Stopping training early to prevent overfitting.</p><figure id="eafc6582-aee7-4744-960d-a10a29309e19" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled.png"><img style="width:1442px" src="MIT%206.S191%20Deep%20Learning_files/Untitled.png"></a></figure></details></li></ul></details></li></ul><ul id="064baea3-2b3b-46c4-a29a-ec19a7d16722" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 2 - RNNs</strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="111c22e9-7898-45fb-aefb-dc4c69e5ad1e" class="toggle"><li><details><summary>What is sequential data? What are some examples of sequential data?</summary><p id="9b56ed44-e18f-413e-8763-4d9e61dfb5de" >Data that comes one after another.</p><ul id="5c900378-dda7-43b7-bf14-33eb7e1fcd2c" class="bulleted-list"><li style="list-style-type:disc">Words in a sentence.</li></ul><ul id="0549bdca-f955-4049-a468-3bf6eac232a4" class="bulleted-list"><li style="list-style-type:disc">Movement of a circle across a screen, if you see it’s previous movement.</li></ul></details></li></ul><ul id="968a7ae7-f274-4665-a092-482b4c9f174c" class="toggle"><li><details><summary>What are different forms of sequence modelling? What are some use cases for different forms?</summary><table id="cf90d8c1-21ec-4c2f-ad47-5e97e1761442" class="simple-table"><tbody><tr id="bce1c3d0-ae0b-43fa-b46a-86986c1a8c05"><td id="FXMd"  style="width:85px">#Inputs</td><td id=":EIB"  style="width:88px">#Outputs</td><td id="Js\?" >Example</td></tr><tr id="725dd7b9-2894-4656-8ce1-6c8a7537be6f"><td id="FXMd"  style="width:85px">One</td><td id=":EIB"  style="width:88px">One</td><td id="Js\?" >Image → Label</td></tr><tr id="f9cbf649-8e26-47bc-b940-fde7b27ae3ff"><td id="FXMd"  style="width:85px">Many </td><td id=":EIB"  style="width:88px">One</td><td id="Js\?" >Sentence → Emoji</td></tr><tr id="da4b7bc3-1ef8-4e10-810c-78f447fe3259"><td id="FXMd"  style="width:85px">One </td><td id=":EIB"  style="width:88px">Many</td><td id="Js\?" >Image → Caption (?)</td></tr><tr id="945c85df-78aa-4923-9223-85c924330788"><td id="FXMd"  style="width:85px">Many</td><td id=":EIB"  style="width:88px">Many</td><td id="Js\?" >Translation</td></tr></tbody></table></details></li></ul><ul id="d9eabc94-9ffb-4722-a989-007fc459199f" class="toggle"><li><details><summary>What are time-steps? and how are they used in neural networks?</summary><p id="739a1c93-d25f-4f1f-84bb-55007c934a3b" >different times for the same type of input. i.e. Inputs may be words, but as they occur at different times (in a specific order), that order is relevant:</p><ul id="d3b65251-4bf6-4f8d-8d45-e718e3e1a031" class="bulleted-list"><li style="list-style-type:disc">“Today was a good day, not bad at all”, is not the same as</li></ul><ul id="16378065-7d55-4004-a6e9-c7a7b6dd0028" class="bulleted-list"><li style="list-style-type:disc">“Today was a bad day, not good at all” xD.</li></ul></details></li></ul><ul id="42207468-4c07-4673-af21-84cba4e0068d" class="toggle"><li><details><summary>What is a recurrent neural network (RNN)?</summary><p id="3a88152d-a833-4696-b76a-d63245c20b5c" >A network that stores information about previous inputs and intermediate values .</p><figure id="d143a2af-add2-4184-99ba-b89623b8639c" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%201.png"><img style="width:368px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%201.png"></a></figure></details></li></ul><ul id="7ecfaac7-ebc0-40a4-84de-c490a8ee1e3c" class="toggle"><li><details><summary>What is a recurrence relation?</summary><p id="73bc45c4-699c-48cc-9383-8c2da30dd808" >The operations relating between previous inputs and operations with new ones.</p><figure id="42660ac8-d221-474e-ac9f-579a935af874" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="bold-italic">h</mi><mi>t</mi></msub><mo>=</mo><msub><mi>f</mi><mi mathvariant="bold-italic">W</mi></msub><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">x</mi><mi>t</mi></msub><mo separator="true">,</mo><msub><mi mathvariant="bold-italic">h</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\bm{h}_t = f_{\bm{W}}(\bm{x}_t, \bm{h}_{t-1})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33027699999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.10764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord boldsymbol mtight" style="margin-right:0.15972em;">W</span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div></figure><figure id="e6b94c6f-c8f1-4eb4-b63b-2a403c744298" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>y</mi><mi>t</mi></msub><mo>=</mo><msub><mi mathvariant="bold-italic">W</mi><mrow><mi>h</mi><mi>y</mi></mrow></msub><msub><mi mathvariant="bold-italic">h</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">y_t = \bm{W}_{hy}\bm{h}_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.15972em;">W</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">h</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div></figure></details></li></ul><ul id="7655f58a-35d3-442f-b896-565d4ebcc59a" class="toggle"><li><details><summary>What would be some pseudocode for a RNN? </summary><pre id="b4420fcd-ac95-4752-b389-a5ff5101c21c" class="code"><code>myRnn = RNN()
+
+h = [0,0,0,0]
+
+sentence = ["How", "was", "your"]
+
+for word in sentence:
+	prediction, h = myRnn(word, h)
+
+# "Evening" is a good prediction here.
+return prediction
+</code></pre></details></li></ul><ul id="72217ab0-d5da-488b-8eef-f68e2e2e9342" class="toggle"><li><details><summary>What is a mathematical interpretation of a RNN?</summary><figure id="cf13884a-5bd3-4749-86e2-a66cf9dde00b" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="bold-italic">h</mi><mi>t</mi></msub><mo>=</mo><mi>tanh</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">W</mi><mrow><mi>h</mi><mi>h</mi></mrow></msub><msub><mi mathvariant="bold-italic">h</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi mathvariant="bold-italic">W</mi><mrow><mi>x</mi><mi>h</mi></mrow></msub><msub><mi mathvariant="bold-italic">x</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\bm{h}_t = \tanh(\bm{W}_{hh}\bm{h}_{t-1} + \bm{W}_{xh}\bm{x}_t).</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">tanh</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.15972em;">W</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">hh</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.15972em;">W</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">h</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">.</span></span></span></span></span></div></figure><figure id="9505338e-7ac7-4e58-acf3-56a24b0b7dde" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="bold-italic">y</mi><mi>t</mi></msub><mo>=</mo><msub><mi mathvariant="bold-italic">W</mi><mrow><mi>h</mi><mi>y</mi></mrow></msub><msub><mi mathvariant="bold-italic">h</mi><mi>t</mi></msub><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\bm{y}_t = \bm{W}_{hy}\bm{h}_t.</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68858em;vertical-align:-0.24414em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03704em;">y</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.18641599999999994em;"><span style="top:-2.4558600000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24414em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.980548em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.15972em;">W</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">h</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">.</span></span></span></span></span></div></figure></details></li></ul><ul id="ea16ddde-402e-4e7a-87c5-6e997ba41657" class="toggle"><li><details><summary>How would a computational graph look like over time?</summary><p id="abcc0cb1-5769-4589-b878-9d96b34dd26d" >Many inputs, many predictions, same parameters.</p><figure id="02c97344-bb5a-45fa-975b-edd98e3745ae" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%202.png"><img style="width:1118px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%202.png"></a></figure></details></li></ul><ul id="e48ac410-3054-4e8a-b951-5a212621d53c" class="toggle"><li><details><summary>How do you calculate loss for an RNN over many timesteps?</summary><p id="7703f870-b1a1-4bf6-b2d5-54d2dbe657ab" >Sum losses for outputs of each time-step.</p><figure id="7a878591-c654-4f1b-8430-c5a442d26f7a" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%203.png"><img style="width:1099px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%203.png"></a></figure><p id="5f80b17c-7324-4afc-a1e6-efe8be195aaf" >Note <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">L_3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> should be <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>L</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">L_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>.</p></details></li></ul><ul id="271b3384-9bc1-41f8-87e4-b1f8fbe6e89a" class="toggle"><li><details><summary>How to initialise an RNN in tensorflow?</summary><pre id="caa613fb-64bd-4e00-8c56-367390ca275d" class="code"><code>myRnn = tf.keras.layers.SimpleRNN(hiddenDim)</code></pre></details></li></ul><ul id="135351ca-dbd0-4a02-b10b-4e915aca83c6" class="toggle"><li><details><summary>What are 4 sequence model design criteria?</summary><ol type="1" id="7378471f-f4fc-444d-b947-1400e9920f74" class="numbered-list" start="1"><li>Variable length inputs.</li></ol><ol type="1" id="e34cf9be-67ae-4008-8e3e-e93a9437128f" class="numbered-list" start="2"><li>Long term dependencies are remembered.</li></ol><ol type="1" id="baf4d349-cfc8-461b-9d94-56d1a6ed954c" class="numbered-list" start="3"><li>Order is remembered.</li></ol><ol type="1" id="425184d4-4b14-4659-b79c-80f42527bc15" class="numbered-list" start="4"><li>Parameters are shared across the sequence.</li></ol></details></li></ul><ul id="e414dcf8-4859-43e5-b194-c9973099afaa" class="toggle"><li><details><summary>How is language encoded for our neural networks?</summary><p id="ec0baf25-087c-4807-935b-0814ecc43a42" >Can be done with a list, or ordered set of words, with associated indexes.</p></details></li></ul><ul id="0c6e0c0a-f6ea-47be-8a19-01e27cd99ad1" class="toggle"><li><details><summary>What is the difference between one-hot embedding and learned embedding?</summary><p id="eca283d7-a489-4247-afc8-385f7baf1b2d" >In both cases we have a vector.</p><ul id="5450b84a-02d1-4ee4-adeb-479f1375a479" class="bulleted-list"><li style="list-style-type:disc">One hot embedding has length = dictionary_length and a 1 in the index of the word and 0s elsewhere.</li></ul><ul id="fc0b3aea-dc19-4e8b-bfd6-956d361be478" class="bulleted-list"><li style="list-style-type:disc">Learned embedding gives similar words similar embeddings(?).</li></ul><figure id="7f21140f-8b55-4e32-af88-ac2b7401ed11" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%204.png"><img style="width:557px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%204.png"></a></figure></details></li></ul><ul id="34cac92c-a9fa-4253-8090-ecf9fc137580" class="toggle"><li><details><summary>What are dependencies, and what does it mean to track them?</summary><p id="69b37593-8619-40f0-a6de-91cd3dfdb6fd" >Old words in a sentence for example, or patterns in music introduced early on, and potentially reintroduced later, with more pazazz 🎊</p><p id="2564c8c2-264f-4b44-bf9e-b76e5b0c05d8" >Inputs to remember and the order they came in.</p></details></li></ul><ul id="e3f358e4-6399-4196-8bb5-7aa8bb5a468c" class="toggle"><li><details><summary>What are some problems with <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>long term </strong></strong></strong></strong></strong></strong></strong></strong></strong></strong>dependencies?</summary><p id="b75f6c0c-4f66-4e48-9f81-f8cc19d27c4e" >They are forgotten about later on in RNNs.</p></details></li></ul><ul id="828ad819-5788-4b54-b02f-cae1a06bd236" class="toggle"><li><details><summary>How should weights and biases be initialised to help with vanishing gradient?</summary><p id="8f8ca3d8-7fda-41a0-9bc4-e43d46034b9c" >Weights initialised to identity matrix, biases to 0.</p></details></li></ul><p id="3a583e5f-78a1-4ec4-a3ec-743d3f8481ef" ><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em>LSTMs are only covered lightly in this course.</em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></p><ul id="11ea1fcf-f64b-4e5a-b93f-55339fdcb819" class="toggle"><li><details><summary>What is gating/gated cells?</summary><p id="280e26f4-abf2-4567-be25-d7ee9aaa8808" >Some details are preserved about the initial data being put in by applying different functions to different products throughout the time-steps:</p><figure id="718f99a6-1721-47a0-9c2a-f1b3396a37d7" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%205.png"><img style="width:1132px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%205.png"></a></figure></details></li></ul><ul id="9575a959-86de-498b-909c-cbb8f0c26cc4" class="toggle"><li><details><summary>What are LSTMs? What does it stand for?</summary><p id="3999ee78-a09f-4dfa-be0e-5a40440e662f" >A collection of related, gated cells.</p><figure id="99bd18c3-cb16-40f0-8b01-d2d3e86748d1" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%206.png"><img style="width:1132px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%206.png"></a></figure></details></li></ul><ul id="9731f596-c54c-4039-9f7b-6195150ba14c" class="toggle"><li><details><summary>How are LSTMs implemented in tensorflow?</summary><pre id="39ade529-fad5-4305-a2a7-a829423f7858" class="code"><code>tf.keras.layers.LSTM(num_units) # ?</code></pre></details></li></ul><ul id="6d0e03df-8bfb-46f5-80ed-5020948b2051" class="toggle"><li><details><summary>What are some limitations of RNNs?</summary><ol type="1" id="d200bfcf-9eb3-4c7b-87dd-73061c374a4b" class="numbered-list" start="1"><li>Encoding bottleneck. (?) </li></ol><ol type="1" id="dc7f8459-018a-4914-9e15-6a410fe11003" class="numbered-list" start="2"><li>Slow due to no parallelisation.</li></ol><ol type="1" id="5ddcab36-819b-46a6-a1f1-8433fbdd1ffb" class="numbered-list" start="3"><li>Bad long term memory.</li></ol></details></li></ul><ul id="a7dd25a4-a03e-41e4-9605-9c96f8ee40d3" class="toggle"><li><details><summary>What are the pros and cons of using a dense network for sequential modelling?</summary><p id="67a0f6ec-83c3-4cc1-b02b-3cc0982fee70" >Pro - no recurrence, so those limitations vanish.</p><p id="2728c963-7030-4b0b-af2c-ea3d5cc93b8d" >Con - No variability of input</p><p id="d1c9ae0e-0828-4ac3-b429-150cd92b6008" >Con - Input can be very large</p><p id="b4b6982c-26e7-41f9-afad-54968e4e6aae" >Con - Order is not (necessarily) relevant</p></details></li></ul><ul id="eb384581-366b-427a-a1d3-cfe1a4f310b8" class="toggle"><li><details><summary>What is self attention?</summary><p id="478c5b62-2e34-420d-8fa5-d8f3e6a8309a" >Not too sure…. All I have is intuition and non relatable (bad) math :(</p><p id="1a11426c-c8bb-473b-9321-0a990d0e4e92" >Basically, parse an input into what is important and should be grouped together against what isn’t important:</p><figure id="efe97b07-c6ce-4e6a-b338-7539e07f05da" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%207.png"><img style="width:1030px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%207.png"></a></figure><p id="59b7c38a-bd2c-423c-8485-5ff59c3d248b" >This is done by first getting a position-aware encoding:</p><figure id="e270e855-025a-4645-b41d-0f08f0172dbd" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%208.png"><img style="width:591px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%208.png"></a></figure><p id="8962e21f-3190-4fd8-a921-750e7a2f83cf" >This is done by getting a query, key and value, which are got by multiplying our input (positional embedding) 3 times by different matrices related to query, key and value:</p><figure id="ed040e78-ceee-4bce-96ef-d61098ab75ca" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%209.png"><img style="width:499px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%209.png"></a></figure><p id="db6290aa-ec25-4feb-b402-ceb425ff272b" >Then compare how similar different elements are by doing <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi><mrow><mi mathvariant="bold-italic">Q</mi><mi mathvariant="bold-italic">K</mi></mrow></mi><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">\bm{QK}^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.111781em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.06979em;">QK</span></span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.917341em;"><span style="top:-3.1390100000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>:</p><figure id="6dcc2147-0045-4aef-8851-e54d5444854f" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2010.png"><img style="width:496px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2010.png"></a></figure><figure id="6013b1d5-5855-4ceb-b100-8cfdc9e7cd67" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2011.png"><img style="width:510px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2011.png"></a></figure><p id="3691d26b-ac84-44da-a856-250e79557a3d" >Then you multiply that with the value matrix to get the output:</p><figure id="058cb247-6897-4941-8cd0-5aafe6211385" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2012.png"><img style="width:503px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2012.png"></a></figure><p id="e17376bb-5926-4cc2-9298-cc568d3aeada" ><strong>Example</strong> with Iron-man:</p><figure id="1179345d-ac7c-41ac-aa34-8490cb006b4a" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2013.png"><img style="width:1072px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2013.png"></a></figure></details></li></ul><ul id="72a08aa9-4791-481c-88de-eb43b110aa5b" class="toggle"><li><details><summary>What is the general structure of a self attention network?</summary><p id="840ae34c-e3e7-429a-b7a2-4588c2b11384" >Get queries and keys, get the similarities, multiply by value matrix and get output:</p><figure id="6380b056-f5e1-45a9-9b1b-f26e7cff42e7" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2014.png"><img style="width:505px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2014.png"></a></figure></details></li></ul></details></li></ul><ul id="3e58320d-0c7a-4a64-a0b9-4edb73b90554" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 3 - Computer Vision</strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="d7302538-30ac-45aa-a15e-57161070ce98" class="bulleted-list"><li style="list-style-type:disc">Computer vision basics</li></ul><ul id="fd8b4c5b-a7c6-4574-8637-e60105362116" class="toggle"><li><details><summary>What are the 2 parts of a CNN?</summary><p id="e04a1257-9f24-4f05-aabe-c75a23e44c09" >Feature extraction - The convolutional part.</p><p id="aa2a6de0-1f9b-4a52-9291-d6141148f0c2" >Classification - The fully connected part, with a softmax at the end.</p></details></li></ul><ul id="d3b2616f-065d-4423-a915-1abf78d88427" class="toggle"><li><details><summary>What is an initial, naive approach to multiple object detection/boxing ?</summary><p id="cd7191cd-0e36-43f4-9abc-80344e407928" >Get a (arbitrary) number of boxes with random sizes and extract features from each of those images. Kind of a brute force method, slow.</p><figure id="e88e0516-cb67-4d0d-a247-057132655fad" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2015.png"><img style="width:1152px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2015.png"></a></figure></details></li></ul><ul id="2ada53a3-3917-445c-8061-780026a624ed" class="toggle"><li><details><summary>What is a better, but still lacking, approach?</summary><p id="b7d5ae1d-83a7-47fe-82f2-d4273869d933" >Have a heuristic for extracting ‘important’ parts of an image.</p></details></li></ul><ul id="6b440d85-35de-4072-88f3-40ab83b45730" class="toggle"><li><details><summary>What is Faster R-CNN?</summary><p id="3dd29807-e7ed-482e-a849-477c6adf0b93" >Have a layer, or a few that extract important parts of an image. This layer is learned like any part of the network.</p></details></li></ul><ul id="24b01c09-d818-41db-9b20-f22853fecacf" class="toggle"><li><details><summary>What is Segmentation?</summary><p id="ededda8d-83ad-4582-95d0-1bb80ade123a" >Super accurate boxing. i.e.</p><figure id="a0db8819-7b94-49a8-9b10-bfe1f2a52679" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2016.png"><img style="width:1132px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2016.png"></a></figure></details></li></ul></details></li></ul><ul id="6eab370b-2c9d-4a18-ad09-e3c5ff14ce13" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 4 - Deep Generative Modelling</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="bc6d1501-eaf4-4cf3-9933-c44a3fc0e07c" class="toggle"><li><details><summary>What are latent variables?</summary><p id="c6339319-0d63-4047-b14c-18afeafd8e16" >Important, but unknown variables in a model, such as identifying an image.</p></details></li></ul><ul id="d60075b7-524c-42c3-88ab-9f569e8222ad" class="toggle"><li><details><summary>What is an auto-encoder?</summary><p id="4b4b7690-2b93-4a8b-b8e1-3e9af092add9" >Takes an image, puts it through a neural network, get’s a small set of latent variables, expands that set of latent variables through another (reconstruction) network, and compares the difference between the original and the reconstructed image as it’s loss.</p><figure id="b8ff232d-00d0-4f9c-bea1-c28ff730b80a" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2017.png"><img style="width:1026px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2017.png"></a></figure></details></li></ul><ul id="a21ebf08-65a6-41a2-b7d3-1785370baf1c" class="toggle"><li><details><summary>How can you compress an image with an auto-encoder?</summary><p id="20edc010-daeb-46b0-b874-e415ad36af15" >The latent variables produced by an auto-encoder can be thought of as a compressed version of the image, especially if trained to the point of overfitting.</p></details></li></ul><ul id="060ded7b-8aa6-41bb-94be-e441722f3406" class="toggle"><li><details><summary>What is a variational auto-encoder (VAE)?</summary><p id="63437db1-1b74-43e6-9396-efc32ed0cd9e" >Adds some randomness, from a gaussian distribution with mean and sd over many latent variable vectors.</p></details></li></ul><ul id="ea246cc2-57ed-4fc2-9c0c-caf9e8b1e551" class="toggle"><li><details><summary>What is the regularisation term on the latent variables in a VAE?</summary><p id="b97331ff-fe53-4fa0-ac47-51e0b41341e9" >D(q(z|x) || p(z)).</p><p id="b06b1b38-d5da-4c49-ab0a-264295864339" >Where p(z) is based on gaussian N(0,1).</p></details></li></ul><ul id="94a3e515-8445-4620-8103-435821d3b914" class="toggle"><li><details><summary>What 2 properties of VAEs does regularisation help to achieve?</summary><ol type="1" id="df30c99d-4f97-4dd8-85cc-434575239693" class="numbered-list" start="1"><li>Continuity - Similar points get mapped to similar images.</li></ol><ol type="1" id="21ffaf68-d4fa-478e-92e9-3df6187d0bbe" class="numbered-list" start="2"><li>Generated images are meaningful, AKA not garbage.</li></ol></details></li></ul><ul id="431b75f9-6737-4dde-b401-0f200e7e52a2" class="toggle"><li><details><summary>How can you overcome the inability to back-propagate through the randomness in the latent variables?</summary><p id="f0855003-24cb-495e-9ce5-3861066b768a" >use the mean and standard deviation of z, plus a little random variable epsilon.</p><p id="2bb5744a-550f-4483-b3a3-90745ea8fb2c" >so <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">z</mi><mo>=</mo><mi mathvariant="bold-italic">μ</mi><mo>+</mo><mi mathvariant="bold-italic">σ</mi><mi>ϵ</mi></mrow><annotation encoding="application/x-tex">\bm{z} = \bm{\mu} + \bm{\sigma}\epsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.44444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.04213em;">z</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">μ</span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.44444em;vertical-align:0em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol" style="margin-right:0.03704em;">σ</span></span></span><span class="mord mathnormal">ϵ</span></span></span></span></span><span>﻿</span></span>, where <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϵ</mi><mo>∼</mo><mi mathvariant="script">N</mi><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\epsilon \sim \mathcal{N}(0,1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">ϵ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.14736em;">N</span><span class="mopen">(</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>. which is determined prior to backprop. </p><p id="fb57cf34-04ee-40a6-b713-9fc775843a11" >This seems kinda dumb though, bc why not randomly fix all random sigma for each training example?</p></details></li></ul><ul id="34cd94a7-0775-4dea-96cc-f014876b622d" class="toggle"><li><details><summary>What is disentanglement? and how is it achieved?</summary><p id="28c2bef2-69d0-4b48-a196-a425ece0be00" >One latent variable may have an impact on multiply semantically relevant properties of an image, and we want one latent variable to have an impact on only one semanitcally relevant property of an image; this is called disentanglement.</p></details></li></ul><ul id="97a5cd2b-30ec-4394-a08a-6604eaedb3ad" class="toggle"><li><details><summary>What is the structure of a Generative Adversarial Network (GAN) ?</summary><p id="3c8e6d1a-63cb-4303-b52a-28f6d8f45cea" >A generative part.</p><p id="891acdc7-3fd8-42a9-b7aa-92699fb4d17a" >A discriminator part.</p><p id="a721677d-9480-49ab-862d-41f66040d121" >We feed a latent variable vector into a generative model, and that generates an image.</p><p id="d37dbfeb-d143-4413-a522-97dbd0694404" >We then feed the generated image and a real image to a discriminator, and the discriminator needs to learn how to classify which one is fake.</p></details></li></ul><ul id="3333df16-1a35-4872-a2ed-f88a09110b60" class="toggle"><li><details><summary>What is a discriminator and a generator?</summary><p id="f0110fdf-c72a-4bd3-9703-c066c4b85da0" >A generator makes fake data.</p><p id="ca4ceccd-ec9b-4549-bd9c-4c18339217de" >A discriminator aims to find which data is real, given one real and one fake input.</p></details></li></ul><p id="dd9a296a-5b14-49f9-9058-91ae110f863a" >
+</p></details></li></ul><ul id="cdcd1e2b-609b-46b3-a969-e402f7db9204" class="toggle"><li><details><summary><em>Unbiasing Paper Summary</em></summary><p id="ad9367d6-38fb-469e-903e-ec806d7862ec" >Increase the representation of under-represented data by learning latent features of the data and increasing the probability of data that has low probabilities in latent features.</p></details></li></ul><ul id="e1443cfe-2a7c-4aba-8826-b28456739685" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 5 - Robust and Trustworthy Deep Learning </strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="9f2bf320-992c-4f8a-8dac-cde5a87bd8f7" class="toggle"><li><details><summary>What is uncertainty?</summary><p id="4ebb820b-c4f2-46e1-8de9-2f7c925403df" >When a model cannot make a clear decision.</p></details></li></ul><ul id="7969bbde-e676-4058-8966-0606cf11e918" class="toggle"><li><details><summary>What is data vs model uncertainty?</summary><p id="0950035c-3fc0-47f7-89e0-fad57bd7d57d" >Data uncertainty is data that our model finds weird, like a horse in a cat-dog classifier.</p><p id="8d9995dd-3a47-46cc-b585-28008cd53d50" >Model uncertainty is when the model is missing data (?).</p></details></li></ul></details></li></ul><ul id="fbe5714f-87f1-477c-8880-ee066f10a1e7" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 6 - Deep Reinforcement learning</strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="4ff0f5c0-762b-486a-9f6a-b6702dea63dd" class="toggle"><li><details><summary>What are 2 aspects of reinforcment and how do they interact?</summary><p id="f801efb8-e229-4fed-8677-f7aab05ae19b" >An actor and an environment.</p><p id="1969c943-10b8-432c-b09e-e4e4e58440b8" >The actor performs actions in a specific state, and the environment responds with a new state.</p></details></li></ul><ul id="3b15b005-194a-4b0b-9f1e-2be6fbe5f555" class="toggle"><li><details><summary>What are rewards?</summary><p id="5a1c8154-8623-47a4-8321-c12c087b4a98" >Rewards are what the actor gets from the environment after each action that show that it’s doing well.</p></details></li></ul><ul id="68823c42-feff-4684-8eb5-eaec24b85761" class="toggle"><li><details><summary>What is total reward? What is discounted reward?</summary><p id="7d75d874-ec2b-410d-9bc8-359304e41e3c" >The sum of all rewards produced by a single action.</p><p id="c5f4f011-91ed-4903-8aac-02b4ba74fd7e" >Disounted reward is:</p><figure id="5b8aec8a-4c91-40d6-b440-f463ec8cc5a8" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mi mathvariant="normal">∞</mi></munderover><msup><mi>γ</mi><mi>k</mi></msup><msub><mi>r</mi><mrow><mi>k</mi><mo>+</mo><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">R_t = \sum_{k=0}^\infty\gamma^kr_{k+t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.9535100000000005em;vertical-align:-1.302113em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6513970000000002em;"><span style="top:-1.8478869999999998em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.0500049999999996em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.300005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">∞</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.302113em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8991079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span></span></div></figure><p id="5e6cd962-684e-4673-9883-5bcdcb9a1746" >Where <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>R</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">R_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> is the total discounted reward at timestep <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathnormal">t</span></span></span></span></span><span>﻿</span></span>, <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">r_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> are the rewards from the previous action and <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>&lt;</mo><mi>γ</mi><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0&lt;\gamma &lt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7335400000000001em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></span><span>﻿</span></span> is a discounting factor. Later timesteps have smaller rewards.</p></details></li></ul><ul id="8b8a7669-1bd9-4e7a-8b0c-3546e987ff65" class="toggle"><li><details><summary>What is the Q function?</summary><p id="98d77f2e-ebc0-4132-8044-0429172bb421" >A function that gives the expected return for each action, given a state.</p><figure id="b3e109f9-b3b0-479d-9d68-82c9847a3500" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Q</mi><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo separator="true">,</mo><msub><mi>a</mi><mi>k</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="double-struck">E</mi><mo stretchy="false">[</mo><msub><mi>R</mi><mi>t</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>s</mi><mi>t</mi></msub><mo separator="true">,</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">Q(s_t, a_k) = \mathbb{E}[R_t|s_t,a_t]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">E</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.00773em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span></span></div></figure><p id="a42ae3b0-68ab-41cc-889f-c002e311e929" >This is learnt by our network.</p></details></li></ul><ul id="41d4a33c-5f49-46ef-8497-e07e9e945183" class="toggle"><li><details><summary>How can we use deep neural networks to model Q-functions?</summary><figure id="7796027a-3920-4c77-9b24-205a5149d482" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2018.png"><img style="width:1097px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2018.png"></a></figure></details></li></ul><ul id="25b3c625-4d9d-4425-894d-019c204bf607" class="toggle"><li><details><summary>How does a policy function differ from a Q-function?</summary><p id="5d99e394-90af-47cc-8e38-ad18a4c2cb49" >A policy function gives the action directly from the state, rather than looking at every possible action.</p></details></li></ul><ul id="44eb20ed-567c-417d-8f66-86a4ddcd45a6" class="toggle"><li><details><summary>What are 3 downsides of Q-learning?</summary><ol type="1" id="d4e7f245-916d-4d05-bee0-464527fe3c49" class="numbered-list" start="1"><li>Models have a small discrete action space</li></ol><ol type="1" id="2436f002-04e1-44f5-b0c8-155a0070f81f" class="numbered-list" start="2"><li>Models cannot really model continuous spaces</li></ol><ol type="1" id="ec9628bd-fa6e-467d-9ef4-dc219a46597a" class="numbered-list" start="3"><li>Cannot learn stochasticity because it’s deterministic.</li></ol></details></li></ul><ul id="0fbdfc45-4ea7-4d76-a9be-bc0dd62aeb27" class="toggle"><li><details><summary>How can policy gradient functions map to a continuous set of actions?</summary><p id="8187e1d1-c5af-417f-bae6-de04b7198f7c" >It can output parameters that relate to getting the ideal action. Taking atari breakout as an example, it could calculate the mean and variance of how fast it should move either left or right: </p><figure id="ec6735ae-f5b9-4e26-b164-8c4b688cf444" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2019.png"><img style="width:927px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2019.png"></a></figure></details></li></ul><ul id="9189891d-4f89-441a-8876-00af31246386" class="toggle"><li><details><summary>How do you train a policy gradient?</summary><p id="118a0666-8ad2-4e2a-97d9-4c45f52128a4" >As the network runs over many timesteps, it may eventually lose the game*. Once it loses the game, we take the last half of the states, actions and rewards and reduce their probability, and we increase the probability of the first half. Probability here might be synonymous with reward (thank god for the <em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em>intuitive picture </em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em>🙄).</p><hr id="40d6d9d1-d176-4d57-80c4-87275a04c22a"><p id="59ecb49d-7001-42f6-b5a4-549554153c75" >*Or crash the autonomous vehicle.</p></details></li></ul><ul id="1ac9e8ff-b63b-4822-994d-228ff9a4c132" class="toggle"><li><details><summary>What is a shortcoming of training a policy gradient network?</summary><p id="06dbbeeb-7f2c-4823-87a2-e6ab4d367b00" >There may be a lot of timesteps until a crash and it’s also expensive and dangerous to crash real life cars all the time.</p></details></li></ul><ul id="5e69eeef-d504-40ba-8be5-fd6b634263cb" class="toggle"><li><details><summary>What is the Sim to Real gap?</summary><p id="6f767721-8e76-413d-86a7-ba525f3826a5" >The gap in the performance of a network in a simulated environment, against a real environment. Usually the network performs far worse in real life because real life has far more objects and variables. </p><p id="00e6ebad-3624-46f7-abeb-dac97eb214b2" >MIT Amini made VISTA with others and it’s meant to overcome this issue by producing photorealistic training data by slightly changing real world data.</p></details></li></ul></details></li></ul><ul id="4db8bbdd-99a5-4234-bd2a-49800f71f63d" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 7 - Deep Learning New Frontiers</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="f4c2145a-443b-43e7-a64b-c99cd19dfd4c" class="toggle"><li><details><summary>What are perturbations?</summary><p id="290b705c-fd0c-4718-a316-52cc85426390" >Small changes. In the DL context, it’s small changes to images that may produce completely different labels.</p></details></li></ul><ul id="e0c236da-1e3d-47e5-adeb-cc179e158cf6" class="toggle"><li><details><summary>What is a graph convolutional network (GCN)?</summary><p id="845c3493-6374-467c-a5c9-d5c692aa2848" >No clue. Its a repeated matrix acting on a node and it’s connections in a graph?</p></details></li></ul><ul id="4929f0cb-1de3-436b-a440-4e5b90e11bda" class="toggle"><li><details><summary>What are some applications of GCNs?</summary><p id="c09a192d-0ada-428d-a34b-c71cf1321407" >Traffic prediction. Molecule production.</p></details></li></ul><ul id="0822f178-b9a6-472e-b48e-33cbb37eb506" class="toggle"><li><details><summary>What are 3 issues with VAEs and GANs?</summary><ol type="1" id="98ef134e-0bbd-4cfe-a8ef-80779bb6e4c1" class="numbered-list" start="1"><li>Mode collapse - keeps making a similar image</li></ol><ol type="1" id="e86713cb-e9c4-442b-a550-5dc66188eb28" class="numbered-list" start="2"><li>Can’t generate unique ideas</li></ol><ol type="1" id="ad888a2d-a471-4b33-b834-572f21901e3f" class="numbered-list" start="3"><li>Hard to train</li></ol></details></li></ul><ul id="44dd2013-0a2e-4f33-9873-775319b15fb2" class="toggle"><li><details><summary>What is a diffusion model?</summary><p id="a224de0f-6bd7-4e02-9190-ccd1a6b9296d" >Generates images from random noise.</p></details></li></ul><ul id="faa72753-3c00-4a4f-9822-60f0bf3f7808" class="toggle"><li><details><summary>What are the 2 parts of training a diffusion model?</summary><ol type="1" id="236abbfe-a42f-4ed9-87df-60e335076e31" class="numbered-list" start="1"><li>Noisify a normal image into a noisy image.</li></ol><ol type="1" id="c476f1b5-2bc1-4a0e-a0b5-931b5784d2e6" class="numbered-list" start="2"><li>Denoise a noisy image into a normal image.</li></ol><figure id="f1495528-813e-4208-a39d-d2788d98ae35" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2020.png"><img style="width:1087px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2020.png"></a></figure></details></li></ul><ul id="d8c89657-737d-4bfc-b09e-30453dddcd77" class="toggle"><li><details><summary>How is a diffusion model able to create novel images from noise?</summary><p id="5d533927-eac1-4d0e-a105-d138d1af7424" >All noise is very different, obviously we interpret it as <em><em><em><em><em><em>noise </em></em></em></em></em></em>but each noise image is near maximally variant from any other noisy image.</p></details></li></ul><p id="4faf0669-fd9f-4b45-9fd5-2369936eb42d" >
+</p></details></li></ul><ul id="81045da8-063a-4f25-a4b7-02cb167ad967" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 8 - Text-to-Image Generation</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="100cc850-153b-411b-8fba-de800d1791a4" class="toggle"><li><details ><summary>What is a dataset that has 5 Billion text and image pairs?</summary><p id="42d6f6ad-cc43-4920-8e08-cfa188ea2fcd" >LAION-5B</p></details></li></ul><ul id="37fb907a-de5d-4174-b8a3-ef1d71afae1a" class="toggle"><li><details ><summary>How does MUSE differ to stable diffusion in terms of upscaling images?</summary><p id="b6c5c948-c95f-412f-9402-200c0e1033e6" >MUSE upscales the latent space, whereas SD analyses images by pixel.</p></details></li></ul><ul id="f816201f-ac2d-4925-982d-fdf9268c9115" class="toggle"><li><details ><summary>What is negative prompting?</summary><p id="e597ef9e-90ba-4aff-8ac5-dc900cdbcddb" >Specify what you <em><em><em><em><em><em><em>don’t </em></em></em></em></em></em></em>want in the image.</p></details></li></ul><ul id="4c180f53-dce9-4e39-bbcc-00253847817f" class="toggle"><li><details ><summary>What is the main reason for MUSE’s very fast speed?</summary><p id="08ab192e-8193-4359-bc4e-734fa4c5fd8f" >Fewer iterations. has 24 where SD may have 50-1000</p></details></li></ul></details></li></ul><ul id="c9fd36b1-9b31-4651-a1d0-c1fe14427065" class="toggle"><li><details><summary><em><em><em><em><em><em><em><em><em><em><em><em>Optional Lab - Reinforcement Learning (RL)</em></em></em></em></em></em></em></em></em></em></em></em></summary><ul id="91165eb2-54c4-47d2-b9fd-767a7a362e55" class="toggle"><li><details><summary>What is reinforcement learning?</summary><p id="67a67d69-3616-4e24-92c1-47ad01b3af9e" >You’ve got an agent (a neural network) and an environment (simulation), and you want the agent to perform well in the environment by choosing certain actions based on the state it’s in. If it performs good actions it gets rewards. Good actions are those that occur in the half of a trial run before a crash, bad ones happen in the second half, a bit arbitrary but eh; one might imagine using an exponential function that integrates to 1, over the range of the episode as being a scale for good and bad, making the very last few moments bad, and the first majority of moments good.</p></details></li></ul><ul id="d700d7c3-23b3-4ed4-8b23-8361a422e923" class="toggle"><li><details><summary>What are 3 stages of deploying an RL model?</summary><ol type="1" id="5da7501f-203f-4b56-a686-63e177b0c3ae" class="numbered-list" start="1"><li>Define the agent and environment</li></ol><ol type="1" id="3134edf6-d488-434c-8fe0-d577315b842d" class="numbered-list" start="2"><li>Define the agents memory</li></ol><ol type="1" id="7100505f-79fa-4032-a2e4-919f6d4b2d8b" class="numbered-list" start="3"><li>Define the learning algorithm (and reward function) </li></ol></details></li></ul><ul id="d24e7ca1-34f3-4002-8b5b-02ca7c3c5a5e" class="toggle"><li><details><summary>What is an episode?</summary><p id="5c1d57f3-d32a-42f8-b0bd-f6aaa9b039c3" >The span of time (-steps) that the agent hasn’t done some illegal terminating move.</p></details></li></ul></details></li></ul><ul id="4d2ad34a-53e5-46de-b7b8-b7089077188f" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 9 - The Modern Era of Statistics</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><ul id="77d9a095-b8a5-420b-91f7-a0ace3ceabeb" class="toggle"><li><details><summary>What is double descent?</summary><p id="9f501595-2ae7-412e-9924-79d160ac8341" >Loss goes down as parameters increase, until it starts to increase*, and then it reaches a hill and goes down to an even lower loss than before.</p><figure id="a1f07954-da39-4249-8a2b-d24b68d9ab07" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2021.png"><img style="width:627px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2021.png"></a></figure><hr id="0a6f06b8-753d-40f3-9313-269716c8a628"><p id="5e0f1dd2-b68b-42d1-b4cc-ce55547c6d1c" >*Potentially due to overfitting.</p></details></li></ul><ul id="fcc541d5-7d4b-4f40-8f5e-3ff0bd4e0dea" class="toggle"><li><details><summary>What is an overparametrization regime?</summary><p id="8c331375-2a67-4bdb-803e-30d02f1f6d7b" >Use more and more paramters in your model, it’s where accuracy increase after a low accuracy lull as parameters increase.</p><figure id="ee42e4f4-1843-4f67-89f8-f45d438b2afa" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2022.png"><img style="width:686px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2022.png"></a></figure></details></li></ul><ul id="6e0d59ba-d5b9-4e52-8df7-54801b869f79" class="toggle"><li><details><summary>What is a pro and a con of overparametrization?</summary><p id="0a6d1c0d-e2bd-47a5-b78a-bc2751f4f712" ><strong><strong><strong><strong><strong>pro: </strong></strong></strong></strong></strong>improves robustness - deals well with adversarial examples.</p><p id="ba308908-f74b-46ed-ae1c-2bc49269407c" ><strong><strong><strong><strong><strong><strong>con: </strong></strong></strong></strong></strong></strong>worse performance on minority samples.</p></details></li></ul><ul id="f00e8d1d-b55b-4d1e-826b-d1c22dd88df3" class="toggle"><li><details><summary>What is label noise?</summary><p id="b10d974e-7f60-4e63-ad3c-a810dcbb8948" >Adding some noise to your input to help deal with adversarial examples. </p><p id="7c2b6d81-807b-44dc-8f90-d153929d2b54" >Essentially making an adversarial dataset lol.</p></details></li></ul><ul id="38e20925-3e9e-431d-a749-28596bbb6952" class="toggle"><li><details><summary>What is a heuristic for parameter size? (law of robustness)</summary><p id="4ee16480-07ab-46e6-8c4d-2d5c371ea692" ><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mi>n</mi><mi>d</mi></mrow><annotation encoding="application/x-tex">p = nd</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">n</span><span class="mord mathnormal">d</span></span></span></span></span><span>﻿</span></span></p><p id="fab52b7e-b5c5-42e9-a0e5-017076519717" >where</p><ul id="5cdbcc6e-864e-47e0-bb3f-340b3ad42d22" class="bulleted-list"><li style="list-style-type:disc"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">p</span></span></span></span></span><span>﻿</span></span> is the number of parameters.</li></ul><ul id="98e34da6-b3fa-4b5c-a9e7-64023e362278" class="bulleted-list"><li style="list-style-type:disc"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span></span><span>﻿</span></span> is the number of examples.</li></ul><ul id="34bfc630-bb8f-489e-bac9-f9c345e01e98" class="bulleted-list"><li style="list-style-type:disc"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">d</span></span></span></span></span><span>﻿</span></span> is the full dimensionality of each example.</li></ul></details></li></ul><ul id="e6dedd2a-9618-4292-ae77-4102af4ac637" class="toggle"><li><details><summary>What is effective dimsionality?</summary><p id="ffb74848-9407-4498-9c90-22d3846925a7" >Since not all elements in the input will represent image to the same degree, the actual dimensionality is lower*.</p><p id="d3c46401-1e1c-4fe8-9699-f67754a86297" >Looking at the MNIST digit example below, pixels near the corners and edges will be a lot less relevant for modelling. When inputs are more complex, it isn’t clear what the effective dimensionality is.</p><figure id="459bbe71-94a6-4bf4-9849-3662d6d305f0" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2023.png"><img style="width:84px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2023.png"></a></figure><hr id="bda30429-1072-47bb-8654-b0a64c18894a"><p id="8c0b2f2c-3607-4872-af91-e28c7bd04903" >*It is the number of pixels that actually make a difference in classification.</p></details></li></ul><ul id="d03cc0a2-c91b-425b-b22f-2935c974cc1d" class="toggle"><li><details><summary>What are Continuous time processes?</summary><p id="133cff88-5e21-4218-9ed1-5bd28ff99ed9" >Going from one layer to another in discrete time is a difference equation*:</p><figure id="07509ddc-e0ef-40bc-a55a-c7b46c335fab" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi mathvariant="bold-italic">h</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><msub><mi mathvariant="bold-italic">h</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\bm{h}_{t+1} = f(\bm{h}_t) .</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.902771em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">.</span></span></span></span></span></div></figure><p id="12cb42de-fcf1-4a82-8312-5cd5e96e4e9f" >In continuous time, we have </p><figure id="d7e29dbd-a4ec-45c4-9c78-bf6b0a997529" class="equation"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><div class="equation-container"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi mathvariant="bold-italic">h</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><mrow><mi mathvariant="normal">∂</mi><mi>t</mi></mrow></mfrac><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi mathvariant="bold-italic">h</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\frac{\partial \bm{h}(t)}{\partial t} = f(\bm{h}(t)).</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord mathnormal">t</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">))</span><span class="mord">.</span></span></span></span></span></div></figure><p id="55b95b0c-9bc4-42fb-b394-f72109af05f2" >This allows for continuous outputs.</p><figure id="797a14a8-a7db-43de-910b-50bc5e36130b" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2024.png"><img style="width:415px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2024.png"></a></figure><hr id="793a58b5-2a87-44c3-a17c-57f235624818"><p id="2222e621-250a-4cf3-a45c-71888e4ba852" >*Simplified, but during test time, the only new input is <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold-italic">h</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">\bm{h}_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mord boldsymbol">h</span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> so it is accurate, everything else is a coefficient or a known function.</p></details></li></ul><ul id="47a1bb3a-111e-420b-a5c8-b7d06d2cad76" class="toggle"><li><details><summary>What is a benefit of continuous time processes?</summary><p id="6cd009e2-488a-4f06-bc93-0a3981102be5" >Smoother, more accurate.</p></details></li></ul><ul id="1e192916-0676-451f-9f7f-e9e21984d42a" class="toggle"><li><details><summary>What is a CT RNN?</summary><p id="7a6cad1d-73c9-4b12-9006-3dca866bafd6" >Continuous Time RNN. It’s in the name.</p><p id="3b2ba70d-6332-46ef-8ae9-9c5e00e1c381" >Not sure what the implementation details are but it’s the following formula, </p><figure id="2fab47c2-1867-49dc-ab65-c8aad78b99ae" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2025.png"><img style="width:661px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2025.png"></a></figure></details></li></ul><ul id="0d62328a-4967-4561-9848-ce9274774a3c" class="toggle"><li><details><summary>What are closed form liquid networks?</summary><p id="cb65c2e4-37d5-4a18-a320-3b63a5e257a5" >A liquid network aims to approximate brain neuron function, partly with non-linear synapses (weights) among other techniques. This leads to some complicated differential equations, which have been solved in closed form as </p><figure id="1890f5fb-e598-4a98-bda1-60fc5a9275ea" class="image"><a href="file:///C:/Users/vpysk/Downloads/MIT%20deep%20learning/MIT%206%20S191%20Deep%20Learning%20d171574c73054c43b5b5997c0b320e0f/Untitled%2026.png"><img style="width:1096px" src="MIT%206.S191%20Deep%20Learning_files/Untitled%2026.png"></a></figure></details></li></ul></details></li></ul><ul id="d7176cd4-e665-4b1b-87ca-839a9942ed7a" class="toggle"><li><details><summary><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>Lecture 10 - The Future of Robotics</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></summary><p id="def10d71-38c0-45c7-82bd-b3c523a3916a" >Cool lecture, no notes though 😂</p></details></li></ul><hr id="7d0fc9ad-cece-423d-91f6-3c360a42161f"><h3 id="d9b735ba-f90d-4b06-a375-63f5cbe36cfe" >Labs</h3><p id="25f89949-9973-466c-a5f4-bd49276c54b2" >Lab 1 and 2 are good fun.</p><p id="b136b082-4ff5-4d48-8c8d-5b5bbe87905e" >Lab 3 requires the “capsa” package mentioned in the THEMIS AI talk, which doesn’t exist on PyPI when I checked on 22/09/2023.</p><p id="ce5117e4-b739-4566-a5d5-bd9cd97682db" >Optional labs <em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em>autonomous_driving </em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em>and <em><em><em><em><em>pong </em></em></em></em></em>were both acually the same lab, just with different folder names, a pong lab does not exist. </p><p id="e5a2c69b-ef97-434c-8c4c-3cdca110a965" >As for the <em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em><em>autonomous_driving </em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em></em>lab, <code>save_video_of_model</code> didn’t work for CartPole (part 1), even after doing some investigation into the mitdeeplearning package and using lab3_old; which was a bit annoying but the agent itself seemed to train well 🤷. </p><p id="5cd47e5c-da94-4db0-a355-4835a7ed3369" >As for Autonomous Driving with VISTA (part 2), I ended up getting an error on some of their pre-written code related to rendering an inspecting a human trace, so I avoided the rest of the lab.</p><hr id="fd57b661-d978-41d7-88f3-0d8f65e64ced"><h3 id="d3058668-deb7-429a-ba48-7996228c3e65" >Further Projects </h3><p id="bf3055a1-6dce-45e2-84ca-efee63d5dd81" >Referenced in lecture 9.</p><ul id="56f19def-1f07-41d9-b74c-51fa22e8c7a6" class="bulleted-list"><li style="list-style-type:disc"><a href="https://github.com/mlech26l/ncps">https://github.com/mlech26l/ncps</a></li></ul><ul id="c4700ae8-71ca-487c-8cdd-4f9e51895ebc" class="bulleted-list"><li style="list-style-type:disc"><a href="https://github.com/raminmh/cfc">https://github.com/raminmh/cfc</a></li></ul><ul id="d5ac658a-f884-435c-9075-0bdcf6cab0ff" class="bulleted-list"><li style="list-style-type:disc"><a href="https://github.com/raminmh/liquid-s4">https://github.com/raminmh/liquid-s4</a> </li></ul><p id="af76f455-0304-44e9-a11d-4d9da47fd8dc" >
+</p></div></article></body></html>
